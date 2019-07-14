@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<!-- ó ú Ñ ü -->
+	<title>Inputs</title>
+
+<!-- Jquery -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+
+</head>
+<body>
+
+<form id="agregar" autocomplete="off">
+	
+<label>Nombres:</label>
+<input type="text" name="nombres" required>
+
+<br>
+
+<label>Edad</label>
+<input type="number" name="edad" required min="18" max="90">
+<br>
+
+<label>Peso</label>
+<input type="number" name="peso" required 
+ step="any">
+
+<br>
+
+<label>Fecha</label>
+<input type="date" name="fecha" required 
+min="2019-07-01" max="2019-07-31" 
+value="2019-07-13">
+
+<br>
+
+<label >Hora</label>
+<input type="time" name="hora" required
+
+value="16:00" >
+
+<br>
+
+<label >Mes</label>
+<input type="month" name="mes" required value="2019-12">
+
+<hr>
+
+<label>Lista</label>
+<select name="lista" required>
+<option value="">Seleccionar</option>
+<option value="1">Laptop</option>
+<option value="2">Mouse</option>
+<option value="3" selected>Monitor</option>
+</select>
+
+<br>
+
+<label>Turno:</label>
+<input type="radio" name="turno"  value="1" required>Mañana
+<input type="radio" name="turno"  value="2" required>Tarde
+<input type="radio" name="turno"  value="3" required>Noche
+
+<br>
+
+<label>Opciones</label>
+<input  name="opciones[]" value="1" type="checkbox">PHP
+<input  name="opciones[]" value="2" type="checkbox">JS
+<input  name="opciones[]" value="3" type="checkbox">.NET  
+
+<br>
+
+<label>Comentario</label>
+<textarea name="comentario"  cols="30" rows="10" required></textarea>
+
+<br>
+
+<button>Agregar</button>
+
+</form>
+
+<div id="data"></div>
+	
+
+<script>
+	
+$(document).on('submit','#agregar',function (e){
+
+ parametros = $(this).serialize();
+
+ //alert(parametros);
+ 
+  //AJAX
+  $.ajax({
+
+  url:'source.php',
+  type:'POST',
+  data:parametros,
+  success:function(data){
+  
+  $('#data').html(data);
+
+  }
+
+  });
+
+
+
+
+e.preventDefault();
+
+});
+
+
+
+</script>
+</body>
+</html>
