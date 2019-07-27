@@ -1,0 +1,13 @@
+Herramientas:
+
+- PDO => API de conexión a Base de Datos
+
+- PHP 7
+
+- Archivo de Conexión
+
+- CRUD
+      - Create (Crear)
+      - Read   (Leer)
+      - Update (Actualizar)
+      - Delete (Eliminar)
