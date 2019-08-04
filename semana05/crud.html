@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>CRUD</title>
+
+<!-- Bootstrap -->
+<!-- CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" ></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Sweet Alert 1.1.3 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+<!-- Convertir a Mayúsculas -->
+<script>
+function Mayusculas(elemento){
+
+elemento.value = elemento.value.toUpperCase();
+
+}
+
+
+</script>
+
+
+</head>
+<body>
+
+<div class="container-fluid">
+
+<div class="row">
+
+<div class="col-md-12">
+
+<div class="barra-navegacion"></div>
+
+</div>
+
+</div>
+
+	
+<div class="row">
+
+<div class="col-md-12">
+
+<button class="btn btn-primary btn-agregar"><i class="fa fa-plus"></i> Agregar</button>
+
+<hr>
+
+<div class="table-responsive">
+
+<table id="consulta"  class="table">
+
+<thead>
+<tr>
+<th>Código</th>
+<th>Nombres</th>
+<th>Apellidos</th>
+<th>DNI</th>
+<th>Fecha de Ingreso</th>
+<th>Acciones</th>
+</tr>
+</thead>
+
+
+
+</table>
+
+
+
+	
+
+</div>
+
+</div>
+	
+</div>
+
+</div>
+
+<!-- Modal Registro -->
+
+<form id="registro" autocomplete="off">
+
+<div class="modal fade" id="modal-registro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      	<input type="hidden" name="accion" class="accion">
+
+      	<input type="hidden" name="id" class="id">
+
+      
+		<div class="form-group">
+		<label>Nombres</label>
+		<input type="text" name="nombres" required class="nombres form-control" onchange="Mayusculas(this)">
+		</div>
+
+		<div class="form-group">
+		<label>Apellidos</label>
+		<input type="text" name="apellidos" required class="apellidos form-control" onchange="Mayusculas(this)">
+		</div>
+
+		<div class="form-group">
+		<label>Dni</label>
+		<input type="text" name="dni" required class="dni form-control">
+		</div>
+
+		<div class="form-group">
+		<label>Fecha de Ingreso</label>
+		<input type="date" name="fechaingreso" required class="fechaingreso form-control">
+		</div>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-submit">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>
+
+
+<script>
+
+//Cargar Barra de Navegación
+$(document).ready(function(){
+
+$.get('nav.html',{},function(data){
+
+$('.barra-navegacion').html(data);
+
+});
+
+
+});
+
+
+//DataTable Server Side
+function loadData(){
+
+$(document).ready(function (){
+
+$('#consulta').DataTable({
+
+
+"bAutoWidth":false,
+"iDisplayLength":25,
+"destroy":true,
+"language":{
+
+ "url":"spanish.json"
+
+},
+"bProcessing":true,
+"sAjaxSource":"source.php?op=1",
+"aoColumns":[
+
+{mData:"id"},
+{mData:"nombres"},
+{mData:"apellidos"},
+{mData:"dni"},
+{mData:"fechaingreso"},
+{mData: null,render:function(data){
+
+acciones = '<button class="btn btn-primary btn-edit" data-id="'+data.id+'" ><i class="fa fa-edit"></i></button> ';
+
+acciones += '<button class="btn btn-danger btn-delete" data-id="'+data.id+'"><i class="fa fa-trash"></i></button>';
+
+return acciones;
+
+}}
+
+
+
+]
+
+
+
+
+
+
+});
+
+
+});
+
+
+}
+	
+//Cargar Data
+loadData();
+
+//Refrescar  cada 5 minutos
+//5 minutos = 300000 (300 mil milisegundos)
+
+setInterval(function (){
+
+//Cargar Data
+loadData();
+
+
+},300000);
+
+
+//Cargar Modal Agregar
+$(document).on('click','.btn-agregar',function (){
+
+$('#registro')[0].reset();
+
+$('.accion').val(2);
+$('.btn-submit').html('Agregar');
+$('.modal-title').html('Agregar');
+$('#modal-registro').modal('show');
+
+});
+
+
+//Cargar Modal Actualizar
+$(document).on('click','.btn-edit',function (){
+
+$('#registro')[0].reset();
+$('.accion').val(3);
+
+id           = $(this).data('id');
+$('.id').val(id);
+
+//Cargar Datos al Formulario
+$.getJSON('source.php?op=5',{'id':id},function (data){
+
+$('.nombres').val(data.nombres);
+$('.apellidos').val(data.apellidos);
+$('.dni').val(data.dni);
+$('.fechaingreso').val(data.fechaingreso);
+
+
+});
+
+
+$('.btn-submit').html('Actualizar');
+$('.modal-title').html('Actualizar');
+$('#modal-registro').modal('show');
+
+});
+
+
+//Cargar Modal Eliminar
+$(document).on('click','.btn-delete',function (){
+
+ id = $(this).data('id');
+
+
+swal({
+  title: "¿Estás Seguro?",
+  text: "El Registro Seleccionado se eliminará de forma permanente",
+  type: "warning",
+  showCancelButton: true,
+  confirmButtonClass: "btn-danger",
+  confirmButtonText: "Si, estoy Seguro",
+  cancelButtonText: "Cancelar",
+  closeOnConfirm: false
+},
+function(){
+
+$.ajax({
+
+url:'source.php?op=4',
+type:'POST',
+data:{'id':id},
+dataType:'JSON',
+beforeSend:function()
+{
+
+swal({
+
+title : "Cargando",
+text  : "No cierre la Ventana",
+imageUrl:"img/loader2.gif",
+showConfirmButton:false
+
+});
+
+
+},
+success:function(data){
+
+//Cargar Data
+loadData();
+
+
+swal({
+
+title : data.title,
+text  : data.text,
+type  : data.type,
+timer : 2000,
+showConfirmButton:false
+
+
+});
+
+
+}
+
+
+});
+
+
+
+
+
+});
+
+
+
+});
+
+//Agregar  o Actualizar Datos
+$(document).on('submit','#registro',function(e){
+ 
+ parametros = $(this).serialize();
+  
+ accion     = $('.accion').val();
+
+ $.ajax({
+
+ url:'source.php?op='+accion,
+ type:'POST',
+ data:parametros,
+ dataType:'JSON',
+ beforeSend:function(){
+
+ swal({
+
+  title  : "Cargando",
+  text   : "No cierre la Ventana",
+  imageUrl:"img/loader2.gif",
+  showConfirmButton:false
+
+ });
+
+
+ },
+ success:function(data){
+
+  //Cargar Data
+loadData();
+
+  swal({
+  
+   title   : data.title,
+   text    : data.text,
+   type    : data.type,
+   timer   :2000,
+   showConfirmButton:false
+
+  });
+
+
+ $('#modal-registro').modal('hide');
+
+
+ }
+
+
+ });
+
+
+
+e.preventDefault();
+});
+
+
+</script>	
+</body>
+</html>

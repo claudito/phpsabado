@@ -11,3 +11,9 @@ Herramientas:
       - Read   (Leer)
       - Update (Actualizar)
       - Delete (Eliminar)
+
+
+
+  SQLSERVER : mssql
+  ORACLE    : oci
+  POSTGRESql: pgsql
